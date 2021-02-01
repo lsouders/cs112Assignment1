@@ -167,12 +167,41 @@ public class ArtCollage {
      * @param filename image to replace tile
      * @param collageCol tile column
      * @param collageRow tile row
-     
+     */
     public void replaceTile (String filename,  int collageCol, int collageRow) {
 
-	    // WRITE YOUR CODE HERE
+        // WRITE YOUR CODE HERE
+
+        // scale given image to match collage scale (scaled image will be store in original)
+        Picture orig = new Picture(filename);
+        Picture scaled = new Picture(tileDimension, tileDimension);
+        for (int i = 0; i < tileDimension; i++) {
+            for (int j = 0; j < tileDimension; j++) {
+                int col = i * orig.width() / tileDimension;
+                int row = j * orig.height() / tileDimension;
+                Color color = orig.get(col, row);
+                scaled.set(i, j, color);
+            }
+        }
+        //original = scaled;
+        
+        // copy original (scaled 'filename' image) to proper tile from given coordinates
+        int ycoord = collageRow * tileDimension, xcoord = collageCol * tileDimension;
+        int rcount = 0, ccount = 0;
+        for (int i = ycoord; i < ycoord + tileDimension -1; i++) {
+            
+            for (int j = xcoord; j < xcoord + tileDimension -1; j++) {
+                if (rcount == tileDimension)
+                    rcount = 0;
+                Color color = scaled.get(rcount, ccount);
+                collage.set(i, j, color);
+                rcount++;
+            }
+            ccount++;
+        }
+        
     }
-*/    
+    
 
     /*
      * Makes a collage of tiles from original Picture
@@ -183,7 +212,7 @@ public class ArtCollage {
 
         // WRITE YOUR CODE HERE
         
-        // scale original
+        // scale original (make image tile-sized)
         Picture scaled = new Picture(tileDimension, tileDimension);
         for (int i = 0; i < tileDimension; i++) {
             for (int j = 0; j < tileDimension; j++) {
@@ -196,15 +225,19 @@ public class ArtCollage {
         
         // after tiledimension size picture, reset counter for display and continue displaying one row at a time
         int w = tileDimension *collageDimension, h = tileDimension * collageDimension;
-
-        int colCount = 0;
+        int rcount = 0, ccount = 0;
 
         for (int i = 0; i < h; i++) {
-
+            if (ccount == tileDimension) ccount = 0;
+            rcount = 0;
             for (int j = 0; j < w; j++) {
-                 // idea for making picture -> collage[i][colCount] = scaled[i][colCount];
+                if (rcount == tileDimension)
+                    rcount = 0;
+                Color color = scaled.get(ccount, rcount);
+                collage.set(i, j, color);
+                rcount++;
             }
-
+            ccount++;
         }
 
     }
@@ -263,6 +296,9 @@ public class ArtCollage {
 
         ArtCollage art = new ArtCollage(args[0]); 
         //art.showOriginalPicture();
+        art.makeCollage();
+        art.replaceTile(args[1], 0, 0);
+        
         art.showCollagePicture();
         
 
