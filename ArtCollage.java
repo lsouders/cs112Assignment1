@@ -152,14 +152,6 @@ public class ArtCollage {
     }
 
 
-
-
-
-
-
-
-
-
     /*
      * Replaces the tile at collageCol,collageRow with the image from filename
      * Tile (0,0) is the upper leftmost tile
@@ -183,17 +175,19 @@ public class ArtCollage {
                 scaled.set(i, j, color);
             }
         }
-        //original = scaled;
         
         // copy original (scaled 'filename' image) to proper tile from given coordinates
-        int ycoord = collageRow * tileDimension, xcoord = collageCol * tileDimension;
+        //  finds pixel values of top left corner of panel that is being replace
+        int ycoord = collageRow * tileDimension, xcoord = collageCol * tileDimension; 
         int rcount = 0, ccount = 0;
-        for (int i = ycoord; i < ycoord + tileDimension -1; i++) {
-            
-            for (int j = xcoord; j < xcoord + tileDimension -1; j++) {
+
+        for (int i = xcoord; i < xcoord + tileDimension; i++) {
+            if (ccount == tileDimension) ccount = 0;
+            rcount = 0;
+            for (int j = ycoord; j < ycoord + tileDimension; j++) {
                 if (rcount == tileDimension)
                     rcount = 0;
-                Color color = scaled.get(rcount, ccount);
+                Color color = scaled.get(ccount, rcount);
                 collage.set(i, j, color);
                 rcount++;
             }
@@ -276,13 +270,13 @@ public class ArtCollage {
      *
      * @param collageCol tile column
      * @param collageRow tile row
-     
+     */
 
     public void grayscaleTile (int collageCol, int collageRow) {
 
 	    // WRITE YOUR CODE HERE
     }
-*/
+
 
 
 
@@ -295,10 +289,10 @@ public class ArtCollage {
     public static void main (String[] args) {
 
         ArtCollage art = new ArtCollage(args[0]); 
-        //art.showOriginalPicture();
-        art.makeCollage();
-        art.replaceTile(args[1], 0, 0);
         
+        art.makeCollage();
+        //art.replaceTile(args[1], 3, 3);
+        //art.showOriginalPicture();
         art.showCollagePicture();
         
 
