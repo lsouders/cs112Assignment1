@@ -8,8 +8,6 @@
 
 import java.awt.Color;
 
-import org.w3c.dom.css.RGBColor;
-
 public class ArtCollage {
 
     // The orginal picture
@@ -251,12 +249,35 @@ public class ArtCollage {
      * @param component is either red, blue or green
      * @param collageCol tile column
      * @param collageRow tile row
-    
+    */
+
     public void colorizeTile (String component,  int collageCol, int collageRow) {
 
-	    // WRITE YOUR CODE HERE
+        // WRITE YOUR CODE HERE
+        
+        int ycoord = collageRow * tileDimension, xcoord = collageCol * tileDimension;
+
+        for (int i = xcoord; i < xcoord + tileDimension; i++) {
+            
+            for (int j = ycoord; j < ycoord + tileDimension; j++) {
+                
+                Color color = collage.get(i, j);
+                int r = color.getRed();
+                int g = color.getGreen();
+                int b = color.getBlue();
+                if (component.toLowerCase() == "red") {
+                    collage.set(i, j, new Color(r, 0, 0));
+                } else if (component.toLowerCase() == "green") {
+                    collage.set(i, j, new Color(0, g, 0));
+                } else if (component.toLowerCase() == "blue") {
+                    collage.set(i, j, new Color(0, 0, b));
+                }
+
+            }
+            
+        }
+
     }
-*/
 
 
 
@@ -274,7 +295,21 @@ public class ArtCollage {
 
     public void grayscaleTile (int collageCol, int collageRow) {
 
-	    // WRITE YOUR CODE HERE
+        // WRITE YOUR CODE HERE
+        
+        int ycoord = collageRow * tileDimension, xcoord = collageCol * tileDimension;
+
+        for (int i = xcoord; i < xcoord + tileDimension; i++) {
+            
+            for (int j = ycoord; j < ycoord + tileDimension; j++) {
+                
+                Color color = collage.get(i, j);
+                Color grey = Luminance.toGray(color);
+                collage.set(i, j, grey);
+            }
+            
+        }
+
     }
 
 
@@ -288,11 +323,19 @@ public class ArtCollage {
      */
     public static void main (String[] args) {
 
-        ArtCollage art = new ArtCollage(args[0]); 
+        ArtCollage art = new ArtCollage(args[0], 200, 2); 
         
         art.makeCollage();
         //art.replaceTile(args[1], 3, 3);
         //art.showOriginalPicture();
+        //art.grayscaleTile(1, 0);
+        //art.colorizeTile("blue", 0, 0);
+        //art.showCollagePicture();
+
+        art.replaceTile(args[1],0,1);
+        art.replaceTile(args[2],1,0);
+        art.replaceTile(args[3],1,1);
+        art.colorizeTile("green",0,0);
         art.showCollagePicture();
         
 
